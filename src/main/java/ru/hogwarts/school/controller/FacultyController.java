@@ -17,30 +17,30 @@ public class FacultyController {
     }
 
     @PostMapping
-    public Faculty create(Faculty faculty) {
-        return facultyService.add(faculty);
+    public Faculty create(String name, String color) {
+        return facultyService.save(name, color);
     }
 
     @PutMapping
-    public Faculty editFaculty(Faculty faculty) {
+    public Faculty editFaculty(String name, String color) {
         if (faculty.getId() == null) {
             throw new RuntimeException();
         }
-        return facultyService.add(faculty);
+        return facultyService.save(name, color);
     }
 
     @GetMapping
-    public Collection<Faculty> getFaculties() {
-        return facultyService.getFaculties();
+    public Collection<Faculty> getAll() {
+        return facultyService.getAll();
     }
 
     @DeleteMapping("/{id}")
     public Faculty deleteFaculty(@PathVariable Long id) {
-        return facultyService.remove(id);
+        return facultyService.deleteById(id);
     }
 
     @GetMapping("/{color}")
-    public Collection<Faculty> findByColor(@PathVariable String color){
-        return facultyService.getFacultiesByColor(color);
+    public Collection<Faculty> filterFacultiesByColor(@PathVariable String color){
+        return facultyService.filterFacultiesByColor(color);
     }
 }

@@ -1,41 +1,45 @@
 package ru.hogwarts.school.service;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.repository.FacultyRepository;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class FacultyService {
-    private final Map<Long, Faculty> map = new HashMap<>();
-    private static Long COUNTER = 0L;
 
-    public Faculty add(Faculty faculty) {
-        if (faculty.getId() == null) {
-            faculty.setId(COUNTER++);
-        }
-        map.put(faculty.getId(), faculty);
-        return faculty;
+    private final FacultyRepository facultyRepository;
+
+    public FacultyService(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
     }
 
-    public Faculty remove(Long id) {
-        return map.remove(id);
-    }
-
-    public Collection<Faculty> getFaculties() {
-        return map.values();
+    public List<Faculty> getAll() {
+        return facultyRepository.findAll();
     }
 
     public Faculty getById(Long id) {
-        return map.get(id);
+        return facultyRepository.findById(id).orElse(null);
     }
 
-    public Collection<Faculty> getFacultiesByColor(String color) {
-        return map.values().stream().
-                filter(it -> it.getColor() == color).
-                collect(Collectors.toList());
+    public Faculty save(String name, String color) {
+        Faculty faculty = new Faculty();
+        faculty.setName(name);
+        faculty.setColor(color);
+        return facultyRepository.save(faculty);
+    }
+
+    public Faculty deleteById(Long id) {
+        facultyRepository.deleteById(id);
+        return null;
+    }
+
+    public List<Faculty> filterFacultiesByColor(String color) {
+        return facultyRepository.findFacultiesByColor(color);
     }
 }

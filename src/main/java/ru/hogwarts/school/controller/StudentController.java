@@ -17,8 +17,8 @@ public class StudentController {
     }
 
     @PostMapping
-    public Student create(Student student) {
-        return studentService.add(student);
+    public Student create(String name, int age) {
+        return studentService.save(name, age);
     }
 
     @PutMapping
@@ -26,22 +26,22 @@ public class StudentController {
         if (student.getId() == null) {
             throw new RuntimeException();
         }
-        return studentService.add(student);
+        return studentService.save(student);
     }
 
     @GetMapping
-    public Collection<Student> getStudents() {
-        return studentService.getStudents();
+    public Collection<Student> getAll() {
+        return studentService.getAll();
     }
 
     @DeleteMapping("/{id}")
-    public Student deleteStudent(@PathVariable Long id) {
-        return studentService.remove(id);
+    public Student deleteById(@PathVariable Long id) {
+        return studentService.deleteById(id);
     }
 
     @GetMapping("/{age}")
-    public Collection<Student> findByAge(@PathVariable int age) {
-        return studentService.getStudentsByAge(age);
+    public Collection<Student> findStudentsByAge(@PathVariable int age) {
+        return studentService.findStudentsByAge(age);
     }
 
 }
