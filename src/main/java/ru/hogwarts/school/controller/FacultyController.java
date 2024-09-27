@@ -1,9 +1,12 @@
 package ru.hogwarts.school.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.service.FacultyService;
+import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
 
@@ -23,7 +26,7 @@ public class FacultyController {
 
     @PutMapping
     public Faculty editFaculty(String name, String color) {
-        if (faculty.getId() == null) {
+        if (facultyService.getId() == null) {
             throw new RuntimeException();
         }
         return facultyService.save(name, color);
@@ -42,5 +45,16 @@ public class FacultyController {
     @GetMapping("/{color}")
     public Collection<Faculty> filterFacultiesByColor(@PathVariable String color){
         return facultyService.filterFacultiesByColor(color);
+    }
+
+
+    @GetMapping("faculty/{studentId}")
+    @Operation(summary = "Получение факультета студента")
+    public ResponseEntity<Faculty> getFaculty(@PathVariable Long studentId) {
+
+        Faculty faculty = StudentService.getById(studentId).getFaculty();
+
+        return ResponseEntity.ok(faculty);
+
     }
 }

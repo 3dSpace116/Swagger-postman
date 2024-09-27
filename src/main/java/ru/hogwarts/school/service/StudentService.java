@@ -14,6 +14,7 @@ public class StudentService {
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
+
     public List<Student> getAll() {
         return studentRepository.findAll();
     }
@@ -37,5 +38,11 @@ public class StudentService {
     public List<Student> findStudentsByAge(int age) {
         return studentRepository.findStudentsByAge(age);
     }
-    
+
+    public List<Student> findStudentsByAgeBetween(int minAge, int maxAge) {
+        return studentRepository.findStudentsByAgeBetween(minAge, maxAge)
+    }
+
+    ;
+
 }
