@@ -11,16 +11,18 @@ import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
-import static com.sun.beans.introspect.PropertyInfo.Name.required;
 
 @RestController
 @RequestMapping("/student")
 public class StudentController {
     private final StudentService studentService;
+    private final FacultyService facultyService;
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, FacultyService facultyService) {
         this.studentService = studentService;
+        this.facultyService = facultyService;
     }
 
     @PostMapping
@@ -29,11 +31,11 @@ public class StudentController {
     }
 
     @PutMapping
-    public Student editStudent(Student student) {
-        if (student.getId() == null) {
+    public Student editStudent(@PathVariable Long id, @RequestParam String name, @RequestParam int age) {
+        if (studentService.getById(id) == null) {
             throw new RuntimeException();
         }
-        return studentService.save(student);
+        return studentService.save(name,age);
     }
 
     @GetMapping
@@ -48,33 +50,31 @@ public class StudentController {
 
     @GetMapping("/{age}")
     public Collection<Student> findStudentsByAge(@PathVariable int age) {
-        return studentService.findStudentsByAge(age);
+        return studentService.findStudentByAge(age);
     }
 
-    @GetMapping {
-        "/filter"
-    }
-
-    public List<Student> findStudentsByAgeBetween(@RequestParam(required = false)Integer age,
-    @RequestParam(required=false)Integer minAge,
-    @RequestParam(required=false)Integer maxAge)
-
-    {
+    @GetMapping("/filter")
+    public List<Student> findStudentsByAgeBetween(@RequestParam(required = false) Integer age,
+                                                  @RequestParam(required = false) Integer minAge,
+                                                  @RequestParam(required = false) Integer maxAge) {
         if (age != null) {
-            return studentService.findStudentsByAge(age);
+            return studentService.findStudentByAge(age);
         }
         if (minAge != null && maxAge != null) {
             return studentService.findStudentsByAgeBetween(minAge, maxAge);
 
         }
+        return null;
     }
+
     @GetMapping("student/{faculty_Id}")
     @Operation(summary = "Получение студента с факультета")
-    public ResponseEntity<Faculty> getStudent(@PathVariable Long facultyId) {
+    public ResponseEntity<Set<Student>> getStudent(@PathVariable Long facultyId) {
 
-        Student student = FacultyService.getById(facultyId).getFaculty();
+        Faculty faculty = facultyService.getById(facultyId);
+        Set<Student> students = faculty.getStudent();
 
-        return ResponseEntity.ok(student);
+        return ResponseEntity.ok(students);
 
     }
 }

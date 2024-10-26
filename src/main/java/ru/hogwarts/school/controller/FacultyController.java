@@ -14,9 +14,11 @@ import java.util.Collection;
 @RequestMapping("/faculty")
 public class FacultyController {
     private final FacultyService facultyService;
+    private final StudentService studentService;
 
-    public FacultyController(FacultyService facultyService) {
+    public FacultyController(FacultyService facultyService, StudentService studentService) {
         this.facultyService = facultyService;
+        this.studentService = studentService;
     }
 
     @PostMapping
@@ -24,9 +26,9 @@ public class FacultyController {
         return facultyService.save(name, color);
     }
 
-    @PutMapping
-    public Faculty editFaculty(String name, String color) {
-        if (facultyService.getId() == null) {
+    @PutMapping("/{id}")
+    public Faculty editFaculty(@PathVariable Long id, @RequestParam String name, @RequestParam String color) {
+        if (facultyService.getById(id) == null) {
             throw new RuntimeException();
         }
         return facultyService.save(name, color);
@@ -43,17 +45,15 @@ public class FacultyController {
     }
 
     @GetMapping("/{color}")
-    public Collection<Faculty> filterFacultiesByColor(@PathVariable String color){
-        return facultyService.filterFacultiesByColor(color);
+    public Collection<Faculty> filterFacultiesByColor(@PathVariable String color) {
+        return facultyService.filterFacultyByColor(color);
     }
 
 
     @GetMapping("faculty/{studentId}")
     @Operation(summary = "Получение факультета студента")
     public ResponseEntity<Faculty> getFaculty(@PathVariable Long studentId) {
-
-        Faculty faculty = StudentService.getById(studentId).getFaculty();
-
+        Faculty faculty = studentService.getById(studentId).getFaculty();
         return ResponseEntity.ok(faculty);
 
     }

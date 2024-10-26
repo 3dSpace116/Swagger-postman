@@ -1,7 +1,5 @@
 package ru.hogwarts.school.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.repository.FacultyRepository;
@@ -10,7 +8,6 @@ import ru.hogwarts.school.repository.FacultyRepository;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class FacultyService {
 
     private final FacultyRepository facultyRepository;
@@ -39,7 +36,7 @@ public class FacultyService {
         return null;
     }
 
-    public List<Faculty> filterFacultiesByColor(String color) {
-        return facultyRepository.findFacultiesByColor(color);
+    public List<Faculty> filterFacultyByColor(String color) {
+        return facultyRepository.findFacultyByColor(color);
     }
 }
