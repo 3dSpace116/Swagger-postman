@@ -43,6 +43,10 @@ public class StudentService {
         return studentRepository.findStudentsByAgeBetween(minAge, maxAge);
     }
 
+    public Integer studentCount (){return studentRepository.studentCount();}
+    public Integer avgAge(){return studentRepository.avgAge();}
+    public List<Student> lastFiveId(){return studentRepository.lastFiveId();}
+
 
 
 }

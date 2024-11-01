@@ -32,6 +32,7 @@ public class FacultyControllerRestTemplateTest {
 
     }
 
+
     @Test
     public void testCreateFaculty() {
         Faculty faculty = new Faculty();

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -35,13 +36,17 @@ public class StudentControllerRestTemplateTest {
         studentList.add(new Student(2L, "Jane Doe", 22, null));
     }
 
+    @LocalServerPort
+    private int port;
+
     @Test
     public void testCreateStudent() {
         Student newStudent = new Student();
         newStudent.setName("Alice Smith");
         newStudent.setAge(21);
-
-        ResponseEntity<Student> response = restTemplate.postForEntity("/student", newStudent, Student.class);
+        ResponseEntity<Student> response = restTemplate.postForEntity("http://localhost:" + port +
+                "/student?name=Alice Smith&age=21", newStudent, Student.class);
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getName()).isEqualTo("Alice Smith");
     }
@@ -53,8 +58,8 @@ public class StudentControllerRestTemplateTest {
         updatedStudent.setName("John Smith");
         updatedStudent.setAge(23);
 
-        ResponseEntity<Student> response = restTemplate.exchange("/student" + "/1", HttpMethod.PUT, new HttpEntity<>(updatedStudent), Student.class);
-
+        ResponseEntity<Student> response = restTemplate.postForEntity("http://localhost:" + port +
+                "/student?id=1&name=John Smith&age=23", updatedStudent, Student.class);
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getName()).isEqualTo("John Smith");
@@ -63,7 +68,7 @@ public class StudentControllerRestTemplateTest {
     @Test
     public void testGetAllStudents() {
 
-        ResponseEntity<Collection> response = restTemplate.getForEntity("/student", Collection.class);
+        ResponseEntity<Collection> response = restTemplate.getForEntity("http://localhost:" + port +"/student",+"/getAll", Collection.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
         assertThat(response.getBody()).isNotEmpty();
@@ -72,7 +77,7 @@ public class StudentControllerRestTemplateTest {
     @Test
     public void testDeleteStudentById() {
 
-        ResponseEntity<Void> response = restTemplate.exchange("/student" + "/1", HttpMethod.DELETE, null, Void.class);
+        ResponseEntity<Void> response = restTemplate.exchange("http://localhost:" + port +"/student", HttpMethod.DELETE, null, Void.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
 
