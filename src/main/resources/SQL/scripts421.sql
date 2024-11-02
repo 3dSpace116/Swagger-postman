@@ -1,4 +1,4 @@
-SELECT TABLE Faculty (
+CREATE TABLE Faculty (
     id INT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     color VARCHAR(50),
@@ -6,7 +6,7 @@ SELECT TABLE Faculty (
 );
 
 
-SELECT TABLE Student (
+CREATE TABLE Student (
     id INT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     age INT DEFAULT 20 CHECK (age >= 16),
