@@ -3,6 +3,8 @@ package ru.hogwarts.school.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 @RequiredArgsConstructor
 @Transactional
 public class AvatarService {
+    private static final Logger logger = LoggerFactory.getLogger(FacultyService.class);
     private final AvatarRepository avatarRepository;
     private final StudentRepository studentRepository;
 
@@ -30,6 +33,7 @@ public class AvatarService {
     private String avatarsDir;
 
     public void uploadAvatar(Long studentId, MultipartFile avatarFile) throws IOException {
+        logger.info("Вызван метод загрузки аватара");
         Student student = studentRepository.getById(studentId);
         Path filePath = Path.of(avatarsDir, student + "." + getExtensions(avatarFile.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
@@ -51,15 +55,19 @@ public class AvatarService {
         avatarRepository.save(avatar);
     }
 
-    public Avatar findAvatar(Long studentId) {return avatarRepository.findByStudentId(studentId).orElse(new Avatar());
+    public Avatar findAvatar(Long studentId) {
+        logger.info("Вызван метод поиска аватара по id");
+        return avatarRepository.findByStudentId(studentId).orElse(new Avatar());
     }
 
     public String getExtensions(String fileName) {
+        logger.info("Вызван запрос расширения файла аватара");
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
-    public List<Avatar>getAvatarsPerPage(Integer pageNumber,Integer pageSize){
-        PageRequest pageRequest=PageRequest.of(pageNumber-1,pageNumber);
+    public List<Avatar> getAvatarsPerPage(Integer pageNumber, Integer pageSize) {
+        logger.info("Вызван метод постраничного вывода аватаров ");
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageNumber);
         return avatarRepository.findAll(pageRequest).getContent();
     }
 }
