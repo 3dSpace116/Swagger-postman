@@ -89,4 +89,54 @@ public class StudentService {
                 .average()
                 .orElse(0.0);
     }
+
+    public void printStudentsInParallel() {
+        System.out.println(getById(0L));
+        System.out.println(getById(1L));
+        Thread thread1 = new Thread(() -> {
+            System.out.println(getById(2L));
+            System.out.println(getById(3L));
+        });
+        Thread thread2 = new Thread(() -> {
+            System.out.println(getById(4L));
+            System.out.println(getById(5L));
+        });
+        thread1.start();
+        thread2.start();
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            System.err.println("Ошибка при ожидании завершения потоков: " + e.getMessage());
+        }
+    }
+
+    public void printStudentsSynchronized() {
+
+        printStudent(getById(0L).getName());
+        printStudent(getById(1L).getName());
+        Thread thread1 = new Thread(() -> {
+            printStudent(getById(2L).getName());
+            printStudent(getById(3L).getName());
+        });
+        Thread thread2 = new Thread(() -> {
+            printStudent(getById(4L).getName());
+            printStudent(getById(5L).getName());
+        });
+        thread1.start();
+        thread2.start();
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            System.err.println("Ошибка при ожидании завершения потоков: " + e.getMessage());
+    }
+
+
+}
+    private synchronized void printStudent(String name) {
+        System.out.println(name);
+    }
 }
