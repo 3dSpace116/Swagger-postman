@@ -33,6 +33,22 @@ public class FacultyController {
         }
         return facultyService.save(name, color);
     }
+    @GetMapping("/getLongestFacultyName")
+    public String getLongestFacultyName(){return facultyService.getLongestFacultyName();}
+
+    @GetMapping("/sum")
+    public int getSum() {
+        int n = 1_000_000;
+        return n * (n + 1) / 2;}
+
+    /*либо вариант
+    Stream.iterate(1, a -> a + 1)
+                     .limit(1_000_000)
+                     .parallel()
+                     .reduce(0L, Long::sum);
+
+                     */
+
 
     @GetMapping
     public Collection<Faculty> getAll() {

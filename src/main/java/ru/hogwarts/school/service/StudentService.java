@@ -7,6 +7,12 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -69,4 +75,18 @@ public class StudentService {
     }
 
 
+    public Collection<Student> findStudentByName() {
+        return studentRepository.findAll().stream().
+                filter(name -> name.startsWith("А")).
+                map(String::toUpperCase).
+                sorted().
+                collect(Collectors.toList());
+    }
+
+    public Integer allStudentavgAge() {
+        return (int) studentRepository.findAll().stream()
+                .mapToInt(Student::getAge)
+                .average()
+                .orElse(0.0);
+    }
 }

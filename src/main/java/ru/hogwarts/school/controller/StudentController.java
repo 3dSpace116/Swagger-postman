@@ -43,6 +43,12 @@ public class StudentController {
         return studentService.getAll();
     }
 
+    @GetMapping("/sortedNamesWhichBeginsA")
+    public Collection<Student> sortedNamesWhichBeginsA(){return studentService.findStudentByName();}
+
+    @GetMapping("/averageAge")
+    public Integer averageAge(){return studentService.allStudentavgAge();}
+
     @DeleteMapping("/{id}")
     public Student deleteById(@PathVariable Long id) {
         return studentService.deleteById(id);
