@@ -35,13 +35,29 @@ public class StudentController {
         if (studentService.getById(id) == null) {
             throw new RuntimeException();
         }
-        return studentService.save(name,age);
+        return studentService.save(name, age);
     }
 
     @GetMapping
     public Collection<Student> getAll() {
         return studentService.getAll();
     }
+
+    @GetMapping("/sortedNamesWhichBeginsA")
+    public Collection<Student> sortedNamesWhichBeginsA() {
+        return studentService.findStudentByName();
+    }
+
+    @GetMapping("/averageAge")
+    public Integer averageAge() {
+        return studentService.allStudentavgAge();
+    }
+
+    @GetMapping("/print-parallel")
+    public void printStudentsInParallel() { studentService.printStudentsInParallel();} //метод выводит результат в консоль
+
+    @GetMapping("/print-synchronized")
+    public void printStudentsSynchronized() {studentService.printStudentsSynchronized();}
 
     @DeleteMapping("/{id}")
     public Student deleteById(@PathVariable Long id) {
@@ -77,4 +93,20 @@ public class StudentController {
         return ResponseEntity.ok(students);
 
     }
+
+    @GetMapping("/studentCount")
+    public Integer studentCount() {
+        return studentService.studentCount();
+    }
+
+    @GetMapping("/avgAge")
+    public Integer avgAge() {
+        return studentService.avgAge();
+    }
+
+    @GetMapping("/lastFiveId")
+    public List<Student> lastFiveId() {
+        return studentService.lastFiveId();
+    }
+
 }
